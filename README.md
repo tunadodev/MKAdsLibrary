@@ -7,9 +7,12 @@
 - Firebase auto log tracking event, tROAS
 
 # Import Library
+Thêm vào project_dir/build.gradle
 ~~~
     maven { url 'https://jitpack.io' }
     maven { url "https://sdk-download.airbridge.io/maven" }
+~~~
+Thêm vào project_dir/app/build.gradle
 ~~~
     implementation 'com.github.tunadodev:MKAdsLibrary:1.0.0'
     implementation 'com.google.android.play:core:1.10.3'
@@ -29,11 +32,10 @@
 # <a id="setup_MKad"></a>Setup MKAd
 ## <a id="set_up_ads"></a>Setup enviroment with id ads for project
 
-We recommend you to setup 2 environments for your project, and only use test id during development, ids from your admob only use when needed and for publishing to Google Store
-* The name must be the same as the name of the marketing request
+Tạo 2 môi trường:
 * Config variant test and release in gradle
-* appDev: using id admob test while dev
-* appProd: use ids from your admob,  build release (build file .aab)
+* appDev: chỉ dụng test id để chạy khi dev
+* appProd: để build release
 
 ~~~    
       productFlavors {
@@ -59,14 +61,14 @@ We recommend you to setup 2 environments for your project, and only use test id 
            }
       }
 ~~~
-AndroidManiafest.xml
+thêm vào AndroidManiafest.xml
 ~~~
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${ad_app_id}" />
 ~~~
 ## <a id="config_ads"></a>Config ads
-Create class Application
+Tạo class Application
 
 Configure your mediation here. using PROVIDER_ADMOB or PROVIDER_MAX
 
