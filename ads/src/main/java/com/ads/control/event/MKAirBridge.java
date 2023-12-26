@@ -84,4 +84,7 @@ public class MKAirBridge {
             Airbridge.trackEvent(event);
         }
     }
+
+    public static void logCustomEvent(String eventName) {
+    }
 }

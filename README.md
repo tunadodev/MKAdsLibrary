@@ -9,8 +9,14 @@
 # Import Library
 Thêm vào project_dir/build.gradle
 ~~~
-    maven { url 'https://jitpack.io' }
-    maven { url "https://sdk-download.airbridge.io/maven" }
+allprojects {
+    repositories {
+	...
+    	maven { url 'https://jitpack.io' }
+    	maven { url "https://sdk-download.airbridge.io/maven" }
+	...
+    }
+}
 ~~~
 Thêm vào project_dir/app/build.gradle
 ~~~
@@ -28,6 +34,7 @@ Thêm vào project_dir/app/build.gradle
 
 * [Billing App](#billing_app)
 * [Ads rule](#ads_rule)
+* [FirebaseEvent](#firebase_event)
 
 # <a id="setup_MKad"></a>Setup MKAd
 ## <a id="set_up_ads"></a>Setup enviroment with id ads for project
@@ -38,43 +45,60 @@ Tạo 2 môi trường:
 * appProd: để build release
 
 ~~~    
-      productFlavors {
-      appDev {
-                manifestPlaceholders = [ad_app_id: "ca-app-pub-3940256099942544~3347511713"]
-                buildConfigField "String", "inter", "\"ca-app-pub-3940256099942544/1033173712\""
-                buildConfigField "String", "banner", "\"ca-app-pub-3940256099942544/6300978111\""
-                buildConfigField "String", "native", "\"ca-app-pub-3940256099942544/2247696110\""
-                buildConfigField "String", "open_resume", "\"ca-app-pub-3940256099942544/3419835294\""
-                buildConfigField "String", "RewardedAd", "\"ca-app-pub-3940256099942544/5224354917\""
-                buildConfigField "Boolean", "build_debug", "true"
-           }
-       appProd {
-            // ADS CONFIG BEGIN (required)
-                manifestPlaceholders = [ad_app_id: "ca-app-pub-3940256099942544~3347511713"]
-                buildConfigField "String", "inter", "\"ca-app-pub-3940256099942544/1033173712\""
-                buildConfigField "String", "banner", "\"ca-app-pub-3940256099942544/6300978111\""
-                buildConfigField "String", "native", "\"ca-app-pub-3940256099942544/2247696110\""
-                buildConfigField "String", "open_resume", "\"ca-app-pub-3940256099942544/3419835294\""
-                buildConfigField "String", "RewardedAd", "\"ca-app-pub-3940256099942544/5224354917\""
-                buildConfigField "Boolean", "build_debug", "false"
-            // ADS CONFIG END (required)
-           }
-      }
+    flavorDimensions "adIds"
+    productFlavors {
+        appDev {
+            //use id test when dev
+            manifestPlaceholders = [ ad_app_id:"ca-app-pub-3940256099942544~3347511713"]
+            buildConfigField "String", "ad_interstitial_splash", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField "String", "ad_banner", "\"ca-app-pub-3940256099942544/6300978111\""
+            buildConfigField "String", "ad_reward", "\"ca-app-pub-3940256099942544/5224354917\""
+            buildConfigField "String", "ad_reward_inter", "\"ca-app-pub-3940256099942544/5354046379\""
+            buildConfigField "String", "ad_appopen_resume", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "String", "ad_native", "\"ca-app-pub-3940256099942544/2247696110\""
+            buildConfigField "String", "ads_open_app", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "Boolean", "env_dev", "true"
+
+        }
+        appProd {
+            //add your id ad here
+            manifestPlaceholders = [ ad_app_id:"ca-app-pub-3940256099942544~3347511713"]
+            buildConfigField "String", "ad_interstitial_splash", "\"ca-app-pub-3940256099942544/1033173712\""
+            buildConfigField "String", "ad_banner", "\"ca-app-pub-3940256099942544/6300978111\""
+            buildConfigField "String", "ad_reward", "\"ca-app-pub-3940256099942544/5224354917\""
+            buildConfigField "String", "ad_reward_inter", "\"ca-app-pub-3940256099942544/5354046379\""
+            buildConfigField "String", "ad_appopen_resume", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "String", "ad_native", "\"ca-app-pub-3940256099942544/2247696110\""
+            buildConfigField "String", "ad_native", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "String", "ads_open_app", "\"ca-app-pub-3940256099942544/3419835294\""
+            buildConfigField "Boolean", "env_dev", "false"
+        }
+    }
 ~~~
-thêm vào AndroidManiafest.xml
+Add element to AndroidManifest.xml
 ~~~
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="${ad_app_id}" />
+<meta-data
+android:name="com.google.android.gms.ads.APPLICATION_ID"
+android:value="${ad_app_id}" />
 ~~~
+
+~~~
+<application>
+...
+tools:replace="android:fullBackupContent"
+...
+</application>
+~~~
+
 ## <a id="config_ads"></a>Config ads
 Tạo class Application
 
 Configure your mediation here. using PROVIDER_ADMOB or PROVIDER_MAX
+Configure your app name, token for AirBridge config
 
 *** Note:Cannot use id ad test for production enviroment 
 ~~~
-class App extends AdsMultiDexApplication(){
+public class App extends AdsMultiDexApplication(){
     @Override
     public void onCreate() {
         super.onCreate();
@@ -113,7 +137,7 @@ class App extends AdsMultiDexApplication(){
     }
 }
 ~~~
-AndroidManiafest.xml
+AndroidManifest.xml
 ~~~
 <application
 android:name=".App"
@@ -350,3 +374,12 @@ https://support.google.com/adsense/answer/16737?hl=en
 To ignore accident click from user. This feature is existed in library
 ## Never reload ad on onAdFailedToLoad
 To ignore infinite loop
+
+# <a id="firebase_event"></a>Firebase event
+## Tracking custom event
+
+~~~
+Bundle bundle = new Bundle();
+bundle.putString("key", "value");
+FirebaseAnalyticsUtil.logCustomEvent("test", this.getApplicationContext(), bundle);
+~~~

@@ -42,4 +42,8 @@ public class FirebaseAnalyticsUtil {
         FirebaseAnalytics.getInstance(context).logEvent("paid_ad_impression_value_001", bundle);
     }
 
+    public static void logCustomEvent(String eventName, Context context, Bundle bundle) {
+        FirebaseAnalytics.getInstance(context).logEvent(eventName, bundle);
+    }
+
 }

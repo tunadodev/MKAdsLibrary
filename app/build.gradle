@@ -25,7 +25,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    flavorDimensions "appDev"
+    flavorDimensions "adIds"
     productFlavors {
         appDev {
             //use id test when dev

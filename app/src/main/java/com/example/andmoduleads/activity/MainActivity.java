@@ -25,6 +25,7 @@ import com.ads.control.ads.wrapper.ApRewardAd;
 import com.ads.control.billing.AppPurchase;
 import com.ads.control.dialog.DialogExitApp1;
 import com.ads.control.dialog.InAppDialog;
+import com.ads.control.event.FirebaseAnalyticsUtil;
 import com.ads.control.funtion.AdCallback;
 import com.ads.control.funtion.DialogExitListener;
 import com.ads.control.funtion.PurchaseListener;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle bundle = new Bundle();
+        bundle.putString("key", "value");
+        FirebaseAnalyticsUtil.logCustomEvent("test", this.getApplicationContext(), bundle);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MKNativeAdView = findViewById(R.id.mkNativeAds);
