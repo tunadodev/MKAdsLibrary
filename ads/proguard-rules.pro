@@ -25,7 +25,7 @@
 
 #================================= ADJUST
 
--keep class com.adjust.sdk.** { *; }
+#-keep class com.adjust.sdk.** { *; }
 -keep class com.google.android.gms.common.ConnectionResult {
     int SUCCESS;
 }
@@ -40,7 +40,7 @@
 #pangle
 -keep class com.bytedance.sdk.openadsdk.** { *; }
 #Appsflyer
--keep class com.appsflyer.** { *; }
+#-keep class com.appsflyer.** { *; }
 
 #tintergal
 -keepattributes Signature
