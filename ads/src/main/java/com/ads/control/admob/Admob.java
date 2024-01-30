@@ -1627,9 +1627,6 @@ public class Admob {
                                     adView.getResponseInfo()
                                             .getMediationAdapterClassName(), AdType.BANNER);
 
-                            if (tokenAdjust != null) {
-                                //MKLogEventManager.logPaidAdjustWithToken(adValue, adView.getAdUnitId(), tokenAdjust);
-                            }
                         });
                     }
 

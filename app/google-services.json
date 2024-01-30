@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961611731098",
+    "project_id": "mkmoduleads",
+    "storage_bucket": "mkmoduleads.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961611731098:android:99a43345d3fce219010f23",
+        "android_client_info": {
+          "package_name": "com.mk.moduleads"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSTpVLl22aejyVsWE_ZwnctyL5yXlyVnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
