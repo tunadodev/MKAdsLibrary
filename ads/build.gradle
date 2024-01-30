@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 2
         versionName "1.0.1"
     }
@@ -26,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
@@ -41,7 +41,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
 
     //admob
-    implementation 'com.google.android.gms:play-services-ads:21.4.0'
+    implementation 'com.google.android.gms:play-services-ads:22.5.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     //mediation admob
     implementation 'com.google.ads.mediation:facebook:6.12.0.0'
