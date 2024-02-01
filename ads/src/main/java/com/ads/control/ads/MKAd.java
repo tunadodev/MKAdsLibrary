@@ -99,8 +99,8 @@ public class MKAd {
      * @param context
      * @param adConfig MKAdConfig object used for SDK initialisation
      */
-    public void init(Application context, MKAdConfig adConfig) {
-        init(context, adConfig, false);
+    public void init(Activity activity, Application context, MKAdConfig adConfig) {
+        init(activity, context, adConfig, false);
     }
 
     /**
@@ -108,7 +108,7 @@ public class MKAd {
      * @param adConfig             MKAdConfig object used for SDK initialisation
      * @param enableDebugMediation set show Mediation Debugger - use only for Max Mediation
      */
-    public void init(Application context, MKAdConfig adConfig, Boolean enableDebugMediation) {
+    public void init(Activity activity, Application context, MKAdConfig adConfig, Boolean enableDebugMediation) {
         if (adConfig == null) {
             throw new RuntimeException("cant not set MKAdConfig null");
         }
@@ -136,7 +136,7 @@ public class MKAd {
                 }, enableDebugMediation);
                 break;
             case MKAdConfig.PROVIDER_ADMOB:
-                Admob.getInstance().init(context, adConfig.getListDeviceTest());
+                Admob.getInstance().init(activity, context, adConfig.getListDeviceTest());
                 if (adConfig.isEnableAdResume())
                     AppOpenManager.getInstance().init(adConfig.getApplication(), adConfig.getIdAdResume());
 
