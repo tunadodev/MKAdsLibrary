@@ -6,11 +6,16 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ads.control.admob.Admob;
 import com.ads.control.admob.AppOpenManager;
 import com.ads.control.ads.MKAd;
+import com.ads.control.applovin.AppLovin;
+import com.ads.control.applovin.AppOpenMax;
+import com.ads.control.config.AirBridgeConfig;
 import com.ads.control.config.MKAdConfig;
 import com.ads.control.funtion.AdCallback;
 import com.example.andmoduleads.BuildConfig;
+import com.example.andmoduleads.MyApplication;
 import com.example.andmoduleads.R;
 
 import java.util.ArrayList;
@@ -22,11 +27,45 @@ public class SplashActivity extends AppCompatActivity {
     private List<String> list = new ArrayList<>();
     private String idAdSplash;
 
+    private void initAds() {
+        String environment = BuildConfig.env_dev ? MKAdConfig.ENVIRONMENT_DEVELOP : MKAdConfig.ENVIRONMENT_PRODUCTION;
+        MyApplication app = MyApplication.getApplication();
+        app.mkAdConfig = new MKAdConfig(app, MKAdConfig.PROVIDER_ADMOB, environment);
 
+        // Optional: setup Airbridge
+        AirBridgeConfig airBridgeConfig = new AirBridgeConfig();
+        airBridgeConfig.setEnableAirBridge(true);
+        airBridgeConfig.setAppNameAirBridge("calculator");
+        airBridgeConfig.setTokenAirBridge("22e9f842075b4fb3a0412debe07f6cdd");
+        MyApplication.getApplication().mkAdConfig.setAirBridgeConfig(airBridgeConfig);
+        // Optional: enable ads resume
+        MyApplication.getApplication().mkAdConfig.setIdAdResume(BuildConfig.ads_open_app);
+
+        // Optional: setup list device test - recommended to use
+
+        app.listTestDevice.add("EC25F576DA9B6CE74778B268CB87E431");
+        app.mkAdConfig.setListDeviceTest(app.listTestDevice);
+        app.mkAdConfig.setIntervalInterstitialAd(15);
+
+        MKAd.getInstance().init(this, app, app.mkAdConfig, false);
+
+        // Auto disable ad resume after user click ads and back to app
+        Admob.getInstance().setDisableAdResumeWhenClickAds(true);
+        AppLovin.getInstance().setDisableAdResumeWhenClickAds(true);
+        // If true -> onNextAction() is called right after Ad Interstitial showed
+        Admob.getInstance().setOpenActivityAfterShowInterAds(true);
+
+        if (MKAd.getInstance().getMediationProvider() == app.mkAdConfig.PROVIDER_ADMOB) {
+            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
+        } else {
+            AppOpenMax.getInstance().disableAppResumeWithActivity(SplashActivity.class);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        initAds();
         if (MKAd.getInstance().getMediationProvider() == MKAdConfig.PROVIDER_ADMOB)
             idAdSplash = BuildConfig.ad_interstitial_splash;
         else

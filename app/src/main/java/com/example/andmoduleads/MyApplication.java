@@ -37,7 +37,7 @@ public class MyApplication extends AdsMultiDexApplication {
 
         storageCommon = new StorageCommon();
         initBilling();
-        initAds();
+        //initAds();
 
     }
 
@@ -59,7 +59,7 @@ public class MyApplication extends AdsMultiDexApplication {
         mkAdConfig.setListDeviceTest(listTestDevice);
         mkAdConfig.setIntervalInterstitialAd(15);
 
-        MKAd.getInstance().init(this, mkAdConfig, false);
+        MKAd.getInstance().init(MainActivity._ac, this, mkAdConfig, false);
 
         // Auto disable ad resume after user click ads and back to app
         Admob.getInstance().setDisableAdResumeWhenClickAds(true);
