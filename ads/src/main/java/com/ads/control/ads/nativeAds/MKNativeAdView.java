@@ -25,6 +25,11 @@ public class MKNativeAdView extends RelativeLayout {
     private FrameLayout layoutPlaceHolder;
     private String TAG = "MKNativeAdView";
 
+    public  enum TYPE_NATIVE_ADS {
+        DEFAULT,
+        LARGER
+    }
+
     public MKNativeAdView(@NonNull Context context) {
         super(context);
         init();
@@ -95,6 +100,25 @@ public class MKNativeAdView extends RelativeLayout {
             layoutCustomNativeAd = R.layout.custom_native_admod_medium_rate;
             setLayoutCustomNativeAd(layoutCustomNativeAd);
         }
+        MKAd.getInstance().loadNativeAd(activity, idAd, layoutCustomNativeAd, layoutPlaceHolder, layoutLoading, MKAdCallback);
+    }
+    public void loadNativeAdWithType(Activity activity, String idAd, MKAdCallback MKAdCallback, TYPE_NATIVE_ADS type) {
+        switch (type) {
+            case LARGER:
+                layoutCustomNativeAd = R.layout.custom_native_admob_large;
+                setLayoutCustomNativeAd(layoutCustomNativeAd);
+                break;
+            default:
+                if (layoutLoading == null) {
+                    setLayoutLoading(R.layout.loading_native_medium);
+                }
+                if (layoutCustomNativeAd == 0) {
+                    layoutCustomNativeAd = R.layout.custom_native_admod_medium_rate;
+                    setLayoutCustomNativeAd(layoutCustomNativeAd);
+                }
+                break;
+        }
+
         MKAd.getInstance().loadNativeAd(activity, idAd, layoutCustomNativeAd, layoutPlaceHolder, layoutLoading, MKAdCallback);
     }
 

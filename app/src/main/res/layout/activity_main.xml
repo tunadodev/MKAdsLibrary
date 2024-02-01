@@ -7,21 +7,15 @@
     android:background="#FDA6A6"
     tools:context=".activity.MainActivity">
 
-    <com.ads.control.ads.nativeAds.MKLargeNativeAdView
+    <com.ads.control.ads.nativeAds.MKNativeAdView
         android:id="@+id/mkLargeNativeAds"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_250sdp"
+        android:layout_height="@dimen/_200sdp"
         android:background="@drawable/bg_card_ads"
         app:layoutCustomNativeAd="@layout/custom_native_admod_medium_rate"
         app:layoutLoading="@layout/loading_native_medium"
         app:layout_constraintStart_toStartOf="@+id/mkNativeAds"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--    <include
-
-        android:id="@+id/include3"
-        layout="@layout/layout_native_medium" />-->
-
     <com.ads.control.ads.nativeAds.MKNativeAdView
         android:id="@+id/mkNativeAds"
         android:layout_width="match_parent"
@@ -29,10 +23,24 @@
         android:background="@drawable/bg_card_ads"
         app:layoutCustomNativeAd="@layout/custom_native_admod_medium_rate"
         app:layoutLoading="@layout/loading_native_medium"
-        app:layout_constraintBottom_toTopOf="@+id/bannerView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.677" />
+        app:layout_constraintTop_toBottomOf="@+id/mkLargeNativeAds" />
+
+    <!--    <include
+
+        android:id="@+id/include3"
+        layout="@layout/layout_native_medium" />-->
+
+<!--    <com.ads.control.ads.nativeAds.MKNativeAdView-->
+<!--        android:id="@+id/mkNativeAds"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/_150sdp"-->
+<!--        android:background="@drawable/bg_card_ads"-->
+<!--        app:layoutCustomNativeAd="@layout/custom_native_admod_medium_rate"-->
+<!--        app:layoutLoading="@layout/loading_native_medium"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/bannerView"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.677" />-->
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"

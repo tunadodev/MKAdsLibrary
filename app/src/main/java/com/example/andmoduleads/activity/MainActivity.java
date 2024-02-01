@@ -17,7 +17,6 @@ import com.ads.control.admob.AppOpenManager;
 import com.ads.control.ads.MKAd;
 import com.ads.control.ads.MKAdCallback;
 import com.ads.control.ads.bannerAds.MKBannerAdView;
-import com.ads.control.ads.nativeAds.MKLargeNativeAdView;
 import com.ads.control.ads.nativeAds.MKNativeAdView;
 import com.ads.control.config.MKAdConfig;
 import com.ads.control.ads.wrapper.ApAdError;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int layoutNativeCustom;
     private MKNativeAdView MKNativeAdView;
-    private MKLargeNativeAdView MKLargeNativeAdView;
+    private MKNativeAdView MKLargeNativeAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,19 +82,20 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Sample integration native ads
          */
-        MKNativeAdView.loadNativeAd(this, idNative, new MKAdCallback() {
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
-        });
 
-        MKLargeNativeAdView.loadNativeAd(this, idNative, new MKAdCallback() {
+        MKLargeNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
             }
-        });
+        },com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.LARGER);
+
+        MKNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        }, com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.DEFAULT);
 
         AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
             @Override
