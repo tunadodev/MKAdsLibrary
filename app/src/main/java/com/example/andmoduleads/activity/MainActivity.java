@@ -1,5 +1,6 @@
 package com.example.andmoduleads.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,9 @@ import com.ads.control.ads.MKAd;
 import com.ads.control.ads.MKAdCallback;
 import com.ads.control.ads.bannerAds.MKBannerAdView;
 import com.ads.control.ads.nativeAds.MKNativeAdView;
+import com.ads.control.applovin.AppLovin;
+import com.ads.control.applovin.AppOpenMax;
+import com.ads.control.config.AirBridgeConfig;
 import com.ads.control.config.MKAdConfig;
 import com.ads.control.ads.wrapper.ApAdError;
 import com.ads.control.ads.wrapper.ApInterstitialAd;
@@ -30,11 +34,13 @@ import com.ads.control.funtion.AdCallback;
 import com.ads.control.funtion.DialogExitListener;
 import com.ads.control.funtion.PurchaseListener;
 import com.example.andmoduleads.BuildConfig;
+import com.example.andmoduleads.MyApplication;
 import com.example.andmoduleads.R;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
 
 public class MainActivity extends AppCompatActivity {
+    public static Activity _ac = null;
     public static final String PRODUCT_ID = "android.test.purchased";
     private static final String TAG = "MAIN_TEST";
     //adjust
@@ -55,16 +61,19 @@ public class MainActivity extends AppCompatActivity {
 
     private int layoutNativeCustom;
     private MKNativeAdView MKNativeAdView;
+    private MKNativeAdView MKLargeNativeAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        _ac = this;
         Bundle bundle = new Bundle();
         bundle.putString("key", "value");
         FirebaseAnalyticsUtil.logCustomEvent("test", this.getApplicationContext(), bundle);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MKNativeAdView = findViewById(R.id.mkNativeAds);
-
+        MKLargeNativeAdView = findViewById(R.id.mkLargeNativeAds);
 
         configMediationProvider();
         MKAd.getInstance().setCountClickToShowAds(3);
@@ -81,13 +90,20 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Sample integration native ads
          */
-        MKNativeAdView.loadNativeAd(this, idNative, new MKAdCallback() {
+
+        MKLargeNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
             }
-        });
+        },com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.LARGER);
 
+        MKNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        }, com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.DEFAULT);
 
         AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
             @Override

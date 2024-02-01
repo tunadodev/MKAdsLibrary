@@ -75,6 +75,11 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.google.android.ump.ConsentDebugSettings;
+import com.google.android.ump.ConsentForm;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.UserMessagingPlatform;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -84,6 +89,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Admob {
     private static final String TAG = "MKAdmob";
@@ -119,6 +125,10 @@ public class Admob {
 
     public Thread threadHighFloor;
     public Thread threadAll;
+
+    private ConsentInformation consentInformation;
+
+    private final AtomicBoolean isMobileAdsInitializeCalled = new AtomicBoolean(false);
 
     public void setFan(boolean fan) {
         isFan = fan;
@@ -174,13 +184,69 @@ public class Admob {
      *
      * @param context
      */
-    public void init(Context context, List<String> testDeviceList) {
+    public void init(Activity activity, Context context, List<String> testDeviceList) {
+        this.context = context;
+        // Create a ConsentRequestParameters object.
+        ConsentDebugSettings debugSettings = new ConsentDebugSettings.Builder(activity)
+                .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                .addTestDeviceHashedId("495ADA41523A0ADC48950EB9BA26AA77")
+                .build();
+        ConsentRequestParameters params = new ConsentRequestParameters
+                .Builder()
+//                .setConsentDebugSettings(debugSettings)
+                .build();
+
+        consentInformation = UserMessagingPlatform.getConsentInformation(activity);
+        consentInformation.requestConsentInfoUpdate(
+                activity,
+                params,
+                (ConsentInformation.OnConsentInfoUpdateSuccessListener) () -> {
+                    UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                            activity,
+                            (ConsentForm.OnConsentFormDismissedListener) loadAndShowError -> {
+                                if (loadAndShowError != null) {
+                                    // Consent gathering failed.
+                                    Log.w(TAG, String.format("%s: %s",
+                                            loadAndShowError.getErrorCode(),
+                                            loadAndShowError.getMessage()));
+                                }
+
+                                // Consent has been gathered.
+                                if (consentInformation.canRequestAds()) {
+                                    initializeMobileAdsSdk(testDeviceList);
+                                }
+                            }
+                    );
+                },
+                (ConsentInformation.OnConsentInfoUpdateFailureListener) requestConsentError -> {
+                    // Consent gathering failed.
+                    Log.w(TAG, String.format("%s: %s",
+                            requestConsentError.getErrorCode(),
+                            requestConsentError.getMessage()));
+                });
+
+        // Check if you can initialize the Google Mobile Ads SDK in parallel
+        // while checking for new consent information. Consent obtained in
+        // the previous session can be used to request ads.
+        if (consentInformation.canRequestAds()) {
+            initializeMobileAdsSdk(testDeviceList);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
             if (!packageName.equals(processName)) {
                 WebView.setDataDirectorySuffix(processName);
             }
+        }
+
+
+
+    }
+
+    void initializeMobileAdsSdk(List<String> testDeviceList) {
+        if (isMobileAdsInitializeCalled.getAndSet(true)) {
+            return;
         }
         MobileAds.initialize(context, initializationStatus -> {
             Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
@@ -191,8 +257,6 @@ public class Admob {
             }
         });
         MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceList).build());
-
-        this.context = context;
     }
 
     public void init(Context context) {
