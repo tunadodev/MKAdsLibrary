@@ -11,6 +11,7 @@ import com.ads.control.admob.Admob;
 import com.ads.control.admob.AppOpenManager;
 import com.example.andmoduleads.activity.MainActivity;
 import com.example.andmoduleads.activity.SplashActivity;
+import com.google.android.gms.ads.nativead.NativeAd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,34 @@ import java.util.List;
 public class MyApplication extends AdsMultiDexApplication {
     protected StorageCommon storageCommon;
     private static MyApplication context;
+
+    private static NativeAd nativeAd = null;
+    private static boolean isNativeAdLoaded = false;
+    private static NativeAdLoadListener nativeAdLoadListener;
+    public interface NativeAdLoadListener {
+        void onNativeAdLoaded();
+    }
+    public static void setNativeAdLoadListener(NativeAdLoadListener listener) {
+        nativeAdLoadListener = listener;
+    }
+
+    public static void setNativeAd(NativeAd ad) {
+        nativeAd = ad;
+        isNativeAdLoaded = true;
+
+        // Notify the listener if set
+        if (nativeAdLoadListener != null) {
+            nativeAdLoadListener.onNativeAdLoaded();
+        }
+    }
+
+    public static NativeAd getNativeAd() {
+        return nativeAd;
+    }
+
+    public static boolean isNativeAdLoaded() {
+        return isNativeAdLoaded;
+    }
 
     public static MyApplication getApplication() {
         return context;

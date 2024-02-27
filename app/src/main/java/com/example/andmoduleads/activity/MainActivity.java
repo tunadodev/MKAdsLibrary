@@ -19,6 +19,7 @@ import com.ads.control.ads.MKAd;
 import com.ads.control.ads.MKAdCallback;
 import com.ads.control.ads.bannerAds.MKBannerAdView;
 import com.ads.control.ads.nativeAds.MKNativeAdView;
+import com.ads.control.ads.wrapper.ApNativeAd;
 import com.ads.control.applovin.AppLovin;
 import com.ads.control.applovin.AppOpenMax;
 import com.ads.control.config.AirBridgeConfig;
@@ -87,23 +88,39 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        if (MyApplication.isNativeAdLoaded()) {
+            // Native Ad đã được load xong, bạn có thể sử dụng nó ở đây
+            NativeAd nativeAd = MyApplication.getNativeAd();
+            renderNativeAd(nativeAd);
+            // Hiển thị Native Ad
+        } else {
+            // Native Ad chưa được load xong, bạn có thể đợi cho đến khi nó được load bằng cách sử dụng listener
+            MyApplication.setNativeAdLoadListener(new MyApplication.NativeAdLoadListener() {
+                @Override
+                public void onNativeAdLoaded() {
+                    NativeAd nativeAd = MyApplication.getNativeAd();
+                    renderNativeAd(nativeAd);
+                    // Hiển thị Native Ad
+                }
+            });
+        }
         /**
          * Sample integration native ads
          */
+//        MKLargeNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
+//            @Override
+//            public void onAdImpression() {
+//                super.onAdImpression();
+//            }
+//        },com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.LARGER);
 
-        MKLargeNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
-        },com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.LARGER);
-
-        MKNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
-        }, com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.DEFAULT);
+//        MKNativeAdView.loadNativeAdWithType(this, idNative, new MKAdCallback() {
+//            @Override
+//            public void onAdImpression() {
+//                super.onAdImpression();
+//            }
+//        }, com.ads.control.ads.nativeAds.MKNativeAdView.TYPE_NATIVE_ADS.DEFAULT);
 
         AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
             @Override
@@ -220,6 +237,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void renderNativeAd(NativeAd nativeAd) {
+        MKLargeNativeAdView.setLayoutCustomNativeAd(com.ads.control.R.layout.custom_native_admob_large);
+        ApNativeAd apNativeAd = new ApNativeAd(com.ads.control.R.layout.custom_native_admob_large, nativeAd);
+        MKLargeNativeAdView.populateNativeAdView(this, apNativeAd);
+    }
     private void configMediationProvider() {
         if (MKAd.getInstance().getMediationProvider() == MKAdConfig.PROVIDER_ADMOB) {
             idBanner = BuildConfig.ad_banner;

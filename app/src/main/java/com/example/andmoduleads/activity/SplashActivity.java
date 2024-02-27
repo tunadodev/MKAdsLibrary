@@ -17,6 +17,7 @@ import com.ads.control.funtion.AdCallback;
 import com.example.andmoduleads.BuildConfig;
 import com.example.andmoduleads.MyApplication;
 import com.example.andmoduleads.R;
+import com.google.android.gms.ads.nativead.NativeAd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,6 @@ public class SplashActivity extends AppCompatActivity {
             idAdSplash = BuildConfig.ad_interstitial_splash;
         else
             idAdSplash = getString(R.string.applovin_test_inter);
-
         AppOpenManager.getInstance().loadAdOpenSplash2id(SplashActivity.class, this,
                 "ca-app-pub-3940256099942544/3419835294",
                 "ca-app-pub-3940256099942544/3419835294", 25000, new AdCallback() {
@@ -80,6 +80,17 @@ public class SplashActivity extends AppCompatActivity {
                         startMain();
                     }
                 });
+
+        Admob.getInstance().loadNativeAd(this, BuildConfig.ad_native, new AdCallback() {
+            @Override
+            public void onUnifiedNativeAdLoaded(NativeAd unifiedNativeAd) {
+                MyApplication.setNativeAd(unifiedNativeAd);
+            }
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+            }
+        }, null);
     }
 
     private void startMain() {
